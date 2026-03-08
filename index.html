@@ -23,10 +23,10 @@ font-size:18px;
 
 <h2>Estudio de retiro</h2>
 
-<p>Cliente: CLIENTE</p>
-<p>SBC: SBC</p>
-<p>Semanas: SEMANAS</p>
-<p>Edad retiro: EDAD</p>
+<p>Cliente: <span id="cliente"></span></p>
+<p>SBC: <span id="sbc"></span></p>
+<p>Semanas: <span id="semanas"></span></p>
+<p>Edad retiro: <span id="edad"></span></p>
 
 <br>
 
@@ -34,5 +34,14 @@ font-size:18px;
 Generar PDF
 </button>
 
+<script>
+const params = new URLSearchParams(window.location.search);
+
+document.getElementById("cliente").textContent = params.get("cliente") || "";
+document.getElementById("sbc").textContent = params.get("sbc") || "";
+document.getElementById("semanas").textContent = params.get("semanas") || "";
+document.getElementById("edad").textContent = params.get("edad") || "";
+</script>
+  
 </body>
 </html>
