@@ -3,30 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <title>Estudio de retiro</title>
+
 <style>
 body{
-font-family:Arial;
-padding:20px;
+font-family: Arial;
+background:#6f84a8;
+display:flex;
+justify-content:center;
+padding:40px;
 }
+
+.card{
+background:white;
+width:320px;
+border-radius:20px;
+padding:30px;
+box-shadow:0 0 0 6px #6b6b6b;
+}
+
+h2{
+margin-top:0;
+}
+
 button{
-padding:12px;
+padding:12px 18px;
 background:#2e7df6;
 color:white;
 border:none;
 border-radius:8px;
 font-size:18px;
+cursor:pointer;
 }
 </style>
+
 </head>
 
 <body>
 
+<div class="card">
+
 <h2>Estudio de retiro</h2>
 
-<p>Cliente: <span id="cliente"></span></p>
-<p>SBC: <span id="sbc"></span></p>
-<p>Semanas: <span id="semanas"></span></p>
-<p>Edad retiro: <span id="edad"></span></p>
+<p><b>Cliente:</b> <span id="cliente"></span></p>
+<p><b>CURP:</b> <span id="curp"></span></p>
+<p><b>NSS:</b> <span id="nss"></span></p>
+<p><b>Teléfono:</b> <span id="telefono"></span></p>
+<p><b>RFC:</b> <span id="rfc"></span></p>
+<p><b>Correo:</b> <span id="correo"></span></p>
+
+<br>
+
+<p><b>SBC:</b> <span id="sbc"></span></p>
+<p><b>Semanas:</b> <span id="semanas"></span></p>
+<p><b>Edad retiro:</b> <span id="edad"></span></p>
 
 <br>
 
@@ -34,14 +63,24 @@ font-size:18px;
 Generar PDF
 </button>
 
+</div>
+
 <script>
+
 const params = new URLSearchParams(window.location.search);
 
 document.getElementById("cliente").textContent = params.get("cliente") || "";
+document.getElementById("curp").textContent = params.get("curp") || "";
+document.getElementById("nss").textContent = params.get("nss") || "";
+document.getElementById("telefono").textContent = params.get("telefono") || "";
+document.getElementById("rfc").textContent = params.get("rfc") || "";
+document.getElementById("correo").textContent = params.get("correo") || "";
+
 document.getElementById("sbc").textContent = params.get("sbc") || "";
 document.getElementById("semanas").textContent = params.get("semanas") || "";
 document.getElementById("edad").textContent = params.get("edad") || "";
+
 </script>
-  
+
 </body>
 </html>
