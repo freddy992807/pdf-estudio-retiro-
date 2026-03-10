@@ -3,12 +3,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
-<title>Estimación de Pensión IMSS</title>
+<title>Estimación de Pensión Ley 73</title>
 
 <style>
-
-/* FORMATO HOJA CARTA */
 
 body{
 font-family:Arial;
@@ -24,16 +21,12 @@ padding:40px;
 box-shadow:0 0 10px rgba(0,0,0,0.2);
 }
 
-/* ENCABEZADO */
-
 .header{
 text-align:center;
+font-size:20px;
 font-weight:bold;
-font-size:18px;
-margin-bottom:20px;
+margin-bottom:25px;
 }
-
-/* SECCIONES */
 
 .section{
 border:1px solid #000;
@@ -66,8 +59,6 @@ background:#e6e6e6;
 text-align:right;
 }
 
-/* BOTON PDF */
-
 .print{
 margin-top:20px;
 padding:10px;
@@ -77,9 +68,7 @@ border:none;
 cursor:pointer;
 }
 
-/* IMPRESION */
-
-@media print {
+@media print{
 
 body{
 background:white;
@@ -111,6 +100,8 @@ return "$"+Number(x).toLocaleString();
 
 window.onload=function(){
 
+/* DATOS */
+
 document.getElementById("nombre").innerHTML=getParam("nombre");
 document.getElementById("curp").innerHTML=getParam("curp");
 document.getElementById("nss").innerHTML=getParam("nss");
@@ -119,25 +110,26 @@ document.getElementById("sbc").innerHTML=money(getParam("sbc"));
 document.getElementById("uma").innerHTML=getParam("uma");
 document.getElementById("semanas").innerHTML=getParam("semanas");
 
+/* VARIABLES */
+
 document.getElementById("por_cb").innerHTML=getParam("por_cb")+"%";
 document.getElementById("por_inc").innerHTML=getParam("por_inc")+"%";
-
-document.getElementById("cb_d").innerHTML=money(getParam("cb_d"));
-document.getElementById("cb_a").innerHTML=money(getParam("cb_a"));
-
 document.getElementById("excedente").innerHTML=getParam("excedente");
 document.getElementById("num_inc").innerHTML=getParam("num_inc");
-
-document.getElementById("inc_anual").innerHTML=money(getParam("inc_anual"));
-document.getElementById("inc_total").innerHTML=money(getParam("inc_total"));
-
-document.getElementById("pension").innerHTML=money(getParam("pension"));
+document.getElementById("reforma").innerHTML="11%";
 
 /* AYUDAS */
 
 document.getElementById("ayuda_esposa").innerHTML=money(getParam("ayuda_esposa"));
 document.getElementById("ayuda_hijos").innerHTML=money(getParam("ayuda_hijos"));
 document.getElementById("ayuda_total").innerHTML=money(getParam("ayuda_total"));
+
+/* CALCULO */
+
+document.getElementById("cb_anual").innerHTML=money(getParam("cb_anual"));
+document.getElementById("inc_total").innerHTML=money(getParam("inc_total"));
+document.getElementById("reforma_total").innerHTML=money(getParam("reforma_total"));
+document.getElementById("pension_final").innerHTML=money(getParam("pension_final"));
 
 /* EDADES */
 
@@ -160,12 +152,12 @@ document.getElementById("edad65").innerHTML=money(getParam("edad65"));
 
 <div class="header">
 
-INSTITUTO MEXICANO DEL SEGURO SOCIAL<br>
-DIRECCIÓN DE PRESTACIONES ECONÓMICAS<br>
-COORDINACIÓN DE PRESTACIONES ECONÓMICAS<br>
+DESPACHO PARA PENSIONES<br>
 ESTIMACIÓN DE PENSIÓN LEY 73
 
 </div>
+
+<!-- DATOS -->
 
 <div class="section">
 
@@ -209,6 +201,8 @@ DATOS DEL ASEGURADO
 
 </div>
 
+<!-- VARIABLES -->
+
 <div class="section">
 
 <div class="section-title">
@@ -242,41 +236,16 @@ VARIABLES DE CÁLCULO
 <td id="num_inc"></td>
 </tr>
 
-</table>
-
-</div>
-
-<div class="section">
-
-<div class="section-title">
-CÁLCULO DE PENSIÓN
-</div>
-
-<table>
-
 <tr>
-<th>Concepto</th>
-<th>Anual</th>
-</tr>
-
-<tr>
-<td>Cuantía Básica</td>
-<td class="money" id="cb_a"></td>
-</tr>
-
-<tr>
-<td>Incrementos por semanas</td>
-<td class="money" id="inc_total"></td>
-</tr>
-
-<tr>
-<td><b>Pensión Total</b></td>
-<td class="money" id="pension"></td>
+<td>Reforma 2004</td>
+<td id="reforma"></td>
 </tr>
 
 </table>
 
 </div>
+
+<!-- AYUDAS -->
 
 <div class="section">
 
@@ -309,6 +278,52 @@ AYUDAS ASISTENCIALES
 </table>
 
 </div>
+
+<!-- CALCULO -->
+
+<div class="section">
+
+<div class="section-title">
+CÁLCULO DE PENSIÓN
+</div>
+
+<table>
+
+<tr>
+<th>Concepto</th>
+<th>Anual</th>
+</tr>
+
+<tr>
+<td>Cuantía Básica</td>
+<td class="money" id="cb_anual"></td>
+</tr>
+
+<tr>
+<td>Incrementos por Semanas</td>
+<td class="money" id="inc_total"></td>
+</tr>
+
+<tr>
+<td>Total Ayudas Asistenciales</td>
+<td class="money" id="ayuda_total"></td>
+</tr>
+
+<tr>
+<td>Total Reforma 2004 (+11%)</td>
+<td class="money" id="reforma_total"></td>
+</tr>
+
+<tr>
+<td><b>Pensión Total Final</b></td>
+<td class="money" id="pension_final"></td>
+</tr>
+
+</table>
+
+</div>
+
+<!-- TABLA EDADES -->
 
 <div class="section">
 
