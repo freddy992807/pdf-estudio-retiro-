@@ -73,7 +73,7 @@ border:none;
 cursor:pointer;
 }
 
-/* SALTO DE PAGINA PDF */
+/* SALTO DE PAGINA */
 
 .page-break{
 page-break-after:always;
@@ -100,11 +100,6 @@ display:none;
 
 <script>
 
-function getParam(name){
-const url=new URL(window.location.href);
-return url.searchParams.get(name);
-}
-
 function money(x){
 return "$"+Number(x).toLocaleString();
 }
@@ -113,50 +108,60 @@ function mensual(x){
 return "$"+(Number(x)/12).toLocaleString();
 }
 
-window.onload=function(){
+/* RECIBIR DATOS DESDE THUNKABLE */
+
+window.addEventListener("message", function(event){
+
+let data = event.data;
+
+if(typeof data === "string"){
+data = JSON.parse(data);
+}
 
 /* DATOS */
 
-document.getElementById("nombre").innerHTML=getParam("nombre");
-document.getElementById("curp").innerHTML=getParam("curp");
-document.getElementById("nss").innerHTML=getParam("nss");
+document.getElementById("nombre").innerHTML=data.nombre;
+document.getElementById("curp").innerHTML=data.curp;
+document.getElementById("nss").innerHTML=data.nss;
 
-document.getElementById("sbc").innerHTML=money(getParam("sbc"));
-document.getElementById("uma").innerHTML=getParam("uma");
-document.getElementById("semanas").innerHTML=getParam("semanas");
+document.getElementById("sbc").innerHTML=money(data.sbc);
+document.getElementById("uma").innerHTML=data.uma;
+document.getElementById("semanas").innerHTML=data.semanas;
 
 /* VARIABLES */
 
-document.getElementById("por_cb").innerHTML=getParam("por_cb")+"%";
-document.getElementById("por_inc").innerHTML=getParam("por_inc")+"%";
-document.getElementById("excedente").innerHTML=getParam("excedente");
-document.getElementById("num_inc").innerHTML=getParam("num_inc");
-document.getElementById("reforma").innerHTML="11%";
+document.getElementById("por_cb").innerHTML=data.por_cb+"%";
+document.getElementById("por_inc").innerHTML=data.por_inc+"%";
+document.getElementById("excedente").innerHTML=data.excedente;
+document.getElementById("num_inc").innerHTML=data.num_inc;
 
 /* AYUDAS */
 
-document.getElementById("ayuda_esposa").innerHTML=money(getParam("ayuda_esposa"));
-document.getElementById("ayuda_hijos").innerHTML=money(getParam("ayuda_hijos"));
-document.getElementById("ayuda_total").innerHTML=money(getParam("ayuda_total"));
+document.getElementById("ayuda_esposa").innerHTML=money(data.ayuda_esposa);
+document.getElementById("ayuda_hijos").innerHTML=money(data.ayuda_hijos);
+document.getElementById("ayuda_total").innerHTML=money(data.ayuda_total);
 
 /* CALCULO */
 
-document.getElementById("cb_anual").innerHTML=money(getParam("cb_anual"));
-document.getElementById("inc_total").innerHTML=money(getParam("inc_total"));
-document.getElementById("reforma_total").innerHTML=money(getParam("reforma_total"));
-document.getElementById("pension_final").innerHTML=money(getParam("pension_final"));
+document.getElementById("cb_anual").innerHTML=money(data.cb_anual);
+document.getElementById("inc_total").innerHTML=money(data.inc_total);
+document.getElementById("reforma_total").innerHTML=money(data.reforma_total);
+document.getElementById("pension_final").innerHTML=money(data.pension_final);
 
 /* EDADES */
 
 let edades=[60,61,62,63,64,65];
 
 edades.forEach(e=>{
-let anual=getParam("edad"+e);
+
+let anual=data["edad"+e];
+
 document.getElementById("edad"+e+"_anual").innerHTML=money(anual);
 document.getElementById("edad"+e+"_mensual").innerHTML=mensual(anual);
+
 });
 
-}
+});
 
 </script>
 
@@ -212,7 +217,7 @@ VARIABLES DE CÁLCULO
 <tr><td>Porcentaje de Incremento</td><td id="por_inc"></td></tr>
 <tr><td>Excedente de Semanas</td><td id="excedente"></td></tr>
 <tr><td>Número de Incrementos</td><td id="num_inc"></td></tr>
-<tr><td>Reforma 2004</td><td id="reforma"></td></tr>
+<tr><td>Reforma 2004</td><td>11%</td></tr>
 
 </table>
 
@@ -284,41 +289,12 @@ PROYECCIÓN DE PENSIÓN POR EDAD
 <th>Pensión mensual</th>
 </tr>
 
-<tr>
-<td>60 años</td>
-<td class="money" id="edad60_anual"></td>
-<td class="money" id="edad60_mensual"></td>
-</tr>
-
-<tr>
-<td>61 años</td>
-<td class="money" id="edad61_anual"></td>
-<td class="money" id="edad61_mensual"></td>
-</tr>
-
-<tr>
-<td>62 años</td>
-<td class="money" id="edad62_anual"></td>
-<td class="money" id="edad62_mensual"></td>
-</tr>
-
-<tr>
-<td>63 años</td>
-<td class="money" id="edad63_anual"></td>
-<td class="money" id="edad63_mensual"></td>
-</tr>
-
-<tr>
-<td>64 años</td>
-<td class="money" id="edad64_anual"></td>
-<td class="money" id="edad64_mensual"></td>
-</tr>
-
-<tr>
-<td>65 años</td>
-<td class="money" id="edad65_anual"></td>
-<td class="money" id="edad65_mensual"></td>
-</tr>
+<tr><td>60 años</td><td class="money" id="edad60_anual"></td><td class="money" id="edad60_mensual"></td></tr>
+<tr><td>61 años</td><td class="money" id="edad61_anual"></td><td class="money" id="edad61_mensual"></td></tr>
+<tr><td>62 años</td><td class="money" id="edad62_anual"></td><td class="money" id="edad62_mensual"></td></tr>
+<tr><td>63 años</td><td class="money" id="edad63_anual"></td><td class="money" id="edad63_mensual"></td></tr>
+<tr><td>64 años</td><td class="money" id="edad64_anual"></td><td class="money" id="edad64_mensual"></td></tr>
+<tr><td>65 años</td><td class="money" id="edad65_anual"></td><td class="money" id="edad65_mensual"></td></tr>
 
 </table>
 
@@ -327,6 +303,11 @@ PROYECCIÓN DE PENSIÓN POR EDAD
 <button class="print" onclick="window.print()">
 Descargar PDF
 </button>
+
+</div>
+
+</body>
+</html>
 
 </div>
 
