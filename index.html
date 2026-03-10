@@ -8,11 +8,23 @@
 
 <style>
 
+/* FORMATO HOJA CARTA */
+
 body{
 font-family:Arial;
-margin:40px;
-background:#f4f4f4;
+background:#e5e5e5;
 }
+
+.page{
+width:816px;
+height:1056px;
+background:white;
+margin:auto;
+padding:40px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+/* ENCABEZADO */
 
 .header{
 text-align:center;
@@ -21,10 +33,11 @@ font-size:18px;
 margin-bottom:20px;
 }
 
+/* SECCIONES */
+
 .section{
 border:1px solid #000;
-background:white;
-margin-top:20px;
+margin-top:18px;
 }
 
 .section-title{
@@ -53,6 +66,8 @@ background:#e6e6e6;
 text-align:right;
 }
 
+/* BOTON PDF */
+
 .print{
 margin-top:20px;
 padding:10px;
@@ -60,6 +75,25 @@ background:#123a63;
 color:white;
 border:none;
 cursor:pointer;
+}
+
+/* IMPRESION */
+
+@media print {
+
+body{
+background:white;
+}
+
+.page{
+box-shadow:none;
+margin:0;
+}
+
+.print{
+display:none;
+}
+
 }
 
 </style>
@@ -99,6 +133,14 @@ document.getElementById("inc_total").innerHTML=money(getParam("inc_total"));
 
 document.getElementById("pension").innerHTML=money(getParam("pension"));
 
+/* AYUDAS */
+
+document.getElementById("ayuda_esposa").innerHTML=money(getParam("ayuda_esposa"));
+document.getElementById("ayuda_hijos").innerHTML=money(getParam("ayuda_hijos"));
+document.getElementById("ayuda_total").innerHTML=money(getParam("ayuda_total"));
+
+/* EDADES */
+
 document.getElementById("edad60").innerHTML=money(getParam("edad60"));
 document.getElementById("edad61").innerHTML=money(getParam("edad61"));
 document.getElementById("edad62").innerHTML=money(getParam("edad62"));
@@ -113,6 +155,8 @@ document.getElementById("edad65").innerHTML=money(getParam("edad65"));
 </head>
 
 <body>
+
+<div class="page">
 
 <div class="header">
 
@@ -147,7 +191,7 @@ DATOS DEL ASEGURADO
 </tr>
 
 <tr>
-<td>Salario Base de Cotización</td>
+<td>SBC</td>
 <td id="sbc"></td>
 </tr>
 
@@ -212,32 +256,54 @@ CÁLCULO DE PENSIÓN
 
 <tr>
 <th>Concepto</th>
-<th>Diario</th>
 <th>Anual</th>
 </tr>
 
 <tr>
 <td>Cuantía Básica</td>
-<td class="money" id="cb_d"></td>
 <td class="money" id="cb_a"></td>
 </tr>
 
 <tr>
-<td>Incremento Anual</td>
-<td></td>
-<td class="money" id="inc_anual"></td>
-</tr>
-
-<tr>
-<td>Incrementos Totales</td>
-<td></td>
+<td>Incrementos por semanas</td>
 <td class="money" id="inc_total"></td>
 </tr>
 
 <tr>
-<td><b>Pensión Total Estimada</b></td>
-<td></td>
+<td><b>Pensión Total</b></td>
 <td class="money" id="pension"></td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+AYUDAS ASISTENCIALES
+</div>
+
+<table>
+
+<tr>
+<th>Concepto</th>
+<th>Anual</th>
+</tr>
+
+<tr>
+<td>Ayuda por Esposa</td>
+<td class="money" id="ayuda_esposa"></td>
+</tr>
+
+<tr>
+<td>Ayuda por Hijos</td>
+<td class="money" id="ayuda_hijos"></td>
+</tr>
+
+<tr>
+<td><b>Total Ayudas</b></td>
+<td class="money" id="ayuda_total"></td>
 </tr>
 
 </table>
@@ -257,35 +323,12 @@ ESTIMACIÓN DE PENSIÓN SEGÚN EDAD
 <th>Pensión anual</th>
 </tr>
 
-<tr>
-<td>60 años</td>
-<td class="money" id="edad60"></td>
-</tr>
-
-<tr>
-<td>61 años</td>
-<td class="money" id="edad61"></td>
-</tr>
-
-<tr>
-<td>62 años</td>
-<td class="money" id="edad62"></td>
-</tr>
-
-<tr>
-<td>63 años</td>
-<td class="money" id="edad63"></td>
-</tr>
-
-<tr>
-<td>64 años</td>
-<td class="money" id="edad64"></td>
-</tr>
-
-<tr>
-<td>65 años</td>
-<td class="money" id="edad65"></td>
-</tr>
+<tr><td>60 años</td><td class="money" id="edad60"></td></tr>
+<tr><td>61 años</td><td class="money" id="edad61"></td></tr>
+<tr><td>62 años</td><td class="money" id="edad62"></td></tr>
+<tr><td>63 años</td><td class="money" id="edad63"></td></tr>
+<tr><td>64 años</td><td class="money" id="edad64"></td></tr>
+<tr><td>65 años</td><td class="money" id="edad65"></td></tr>
 
 </table>
 
@@ -294,6 +337,8 @@ ESTIMACIÓN DE PENSIÓN SEGÚN EDAD
 <button class="print" onclick="window.print()">
 Descargar PDF
 </button>
+
+</div>
 
 </body>
 </html>
