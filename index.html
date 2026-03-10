@@ -3,14 +3,15 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Estudio de Retiro IMSS</title>
+
+<title>Estimación de Pensión IMSS</title>
 
 <style>
 
 body{
-font-family: Arial;
+font-family:Arial;
 margin:40px;
-background:#f5f5f5;
+background:#f4f4f4;
 }
 
 .header{
@@ -22,12 +23,12 @@ margin-bottom:20px;
 
 .section{
 border:1px solid #000;
-margin-top:15px;
 background:white;
+margin-top:20px;
 }
 
 .section-title{
-background:#0d3b66;
+background:#123a63;
 color:white;
 padding:6px;
 font-weight:bold;
@@ -44,14 +45,18 @@ padding:6px;
 font-size:13px;
 }
 
-.highlight{
-background:#e6eef7;
+th{
+background:#e6e6e6;
+}
+
+.money{
+text-align:right;
 }
 
 .print{
 margin-top:20px;
 padding:10px;
-background:#0d3b66;
+background:#123a63;
 color:white;
 border:none;
 cursor:pointer;
@@ -75,12 +80,24 @@ window.onload=function(){
 document.getElementById("nombre").innerHTML=getParam("nombre");
 document.getElementById("curp").innerHTML=getParam("curp");
 document.getElementById("nss").innerHTML=getParam("nss");
+
 document.getElementById("sbc").innerHTML=money(getParam("sbc"));
+document.getElementById("uma").innerHTML=getParam("uma");
 document.getElementById("semanas").innerHTML=getParam("semanas");
 
-document.getElementById("cb").innerHTML=money(getParam("cb"));
-document.getElementById("inc").innerHTML=money(getParam("inc"));
-document.getElementById("total").innerHTML=money(getParam("total"));
+document.getElementById("por_cb").innerHTML=getParam("por_cb")+"%";
+document.getElementById("por_inc").innerHTML=getParam("por_inc")+"%";
+
+document.getElementById("cb_d").innerHTML=money(getParam("cb_d"));
+document.getElementById("cb_a").innerHTML=money(getParam("cb_a"));
+
+document.getElementById("excedente").innerHTML=getParam("excedente");
+document.getElementById("num_inc").innerHTML=getParam("num_inc");
+
+document.getElementById("inc_anual").innerHTML=money(getParam("inc_anual"));
+document.getElementById("inc_total").innerHTML=money(getParam("inc_total"));
+
+document.getElementById("pension").innerHTML=money(getParam("pension"));
 
 document.getElementById("edad60").innerHTML=money(getParam("edad60"));
 document.getElementById("edad61").innerHTML=money(getParam("edad61"));
@@ -101,7 +118,8 @@ document.getElementById("edad65").innerHTML=money(getParam("edad65"));
 
 INSTITUTO MEXICANO DEL SEGURO SOCIAL<br>
 DIRECCIÓN DE PRESTACIONES ECONÓMICAS<br>
-ESTIMACIÓN DE PENSIÓN – LEY 73
+COORDINACIÓN DE PRESTACIONES ECONÓMICAS<br>
+ESTIMACIÓN DE PENSIÓN LEY 73
 
 </div>
 
@@ -129,8 +147,13 @@ DATOS DEL ASEGURADO
 </tr>
 
 <tr>
-<td>SBC</td>
+<td>Salario Base de Cotización</td>
 <td id="sbc"></td>
+</tr>
+
+<tr>
+<td>SBC en UMA</td>
+<td id="uma"></td>
 </tr>
 
 <tr>
@@ -145,29 +168,34 @@ DATOS DEL ASEGURADO
 <div class="section">
 
 <div class="section-title">
-CÁLCULO DE PENSIÓN
+VARIABLES DE CÁLCULO
 </div>
 
 <table>
 
-<tr class="highlight">
+<tr>
 <th>Concepto</th>
-<th>Anual</th>
+<th>Valor</th>
 </tr>
 
 <tr>
-<td>Cuantía Básica</td>
-<td id="cb"></td>
+<td>Porcentaje de Cuantía Básica</td>
+<td id="por_cb"></td>
 </tr>
 
 <tr>
-<td>Incrementos por semanas</td>
-<td id="inc"></td>
+<td>Porcentaje de Incremento</td>
+<td id="por_inc"></td>
 </tr>
 
 <tr>
-<td><b>Pensión Total</b></td>
-<td id="total"></td>
+<td>Excedente de Semanas</td>
+<td id="excedente"></td>
+</tr>
+
+<tr>
+<td>Número de Incrementos</td>
+<td id="num_inc"></td>
 </tr>
 
 </table>
@@ -177,44 +205,86 @@ CÁLCULO DE PENSIÓN
 <div class="section">
 
 <div class="section-title">
-ESTIMACIÓN DE PENSIÓN POR EDAD
+CÁLCULO DE PENSIÓN
 </div>
 
 <table>
 
-<tr class="highlight">
+<tr>
+<th>Concepto</th>
+<th>Diario</th>
+<th>Anual</th>
+</tr>
+
+<tr>
+<td>Cuantía Básica</td>
+<td class="money" id="cb_d"></td>
+<td class="money" id="cb_a"></td>
+</tr>
+
+<tr>
+<td>Incremento Anual</td>
+<td></td>
+<td class="money" id="inc_anual"></td>
+</tr>
+
+<tr>
+<td>Incrementos Totales</td>
+<td></td>
+<td class="money" id="inc_total"></td>
+</tr>
+
+<tr>
+<td><b>Pensión Total Estimada</b></td>
+<td></td>
+<td class="money" id="pension"></td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+ESTIMACIÓN DE PENSIÓN SEGÚN EDAD
+</div>
+
+<table>
+
+<tr>
 <th>Edad</th>
 <th>Pensión anual</th>
 </tr>
 
 <tr>
 <td>60 años</td>
-<td id="edad60"></td>
+<td class="money" id="edad60"></td>
 </tr>
 
 <tr>
 <td>61 años</td>
-<td id="edad61"></td>
+<td class="money" id="edad61"></td>
 </tr>
 
 <tr>
 <td>62 años</td>
-<td id="edad62"></td>
+<td class="money" id="edad62"></td>
 </tr>
 
 <tr>
 <td>63 años</td>
-<td id="edad63"></td>
+<td class="money" id="edad63"></td>
 </tr>
 
 <tr>
 <td>64 años</td>
-<td id="edad64"></td>
+<td class="money" id="edad64"></td>
 </tr>
 
 <tr>
 <td>65 años</td>
-<td id="edad65"></td>
+<td class="money" id="edad65"></td>
 </tr>
 
 </table>
