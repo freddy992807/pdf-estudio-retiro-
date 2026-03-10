@@ -1,85 +1,229 @@
 <!DOCTYPE html>
+
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Estudio de retiro</title>
+<title>Estudio de Retiro IMSS</title>
 
 <style>
+
 body{
 font-family: Arial;
-background:#6f84a8;
-display:flex;
-justify-content:center;
-padding:40px;
+margin:40px;
+background:#f5f5f5;
 }
 
-.card{
+.header{
+text-align:center;
+font-weight:bold;
+font-size:18px;
+margin-bottom:20px;
+}
+
+.section{
+border:1px solid #000;
+margin-top:15px;
 background:white;
-width:320px;
-border-radius:20px;
-padding:30px;
-box-shadow:0 0 0 6px #6b6b6b;
 }
 
-h2{
-margin-top:0;
+.section-title{
+background:#0d3b66;
+color:white;
+padding:6px;
+font-weight:bold;
 }
 
-button{
-padding:12px 18px;
-background:#2e7df6;
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+td,th{
+border:1px solid #000;
+padding:6px;
+font-size:13px;
+}
+
+.highlight{
+background:#e6eef7;
+}
+
+.print{
+margin-top:20px;
+padding:10px;
+background:#0d3b66;
 color:white;
 border:none;
-border-radius:8px;
-font-size:18px;
 cursor:pointer;
 }
+
 </style>
+
+<script>
+
+function getParam(name){
+const url=new URL(window.location.href);
+return url.searchParams.get(name);
+}
+
+function money(x){
+return "$"+Number(x).toLocaleString();
+}
+
+window.onload=function(){
+
+document.getElementById("nombre").innerHTML=getParam("nombre");
+document.getElementById("curp").innerHTML=getParam("curp");
+document.getElementById("nss").innerHTML=getParam("nss");
+document.getElementById("sbc").innerHTML=money(getParam("sbc"));
+document.getElementById("semanas").innerHTML=getParam("semanas");
+
+document.getElementById("cb").innerHTML=money(getParam("cb"));
+document.getElementById("inc").innerHTML=money(getParam("inc"));
+document.getElementById("total").innerHTML=money(getParam("total"));
+
+document.getElementById("edad60").innerHTML=money(getParam("edad60"));
+document.getElementById("edad61").innerHTML=money(getParam("edad61"));
+document.getElementById("edad62").innerHTML=money(getParam("edad62"));
+document.getElementById("edad63").innerHTML=money(getParam("edad63"));
+document.getElementById("edad64").innerHTML=money(getParam("edad64"));
+document.getElementById("edad65").innerHTML=money(getParam("edad65"));
+
+}
+
+</script>
 
 </head>
 
 <body>
 
-<div class="card">
+<div class="header">
 
-<h2>Estudio de retiro</h2>
-
-<p><b>Cliente:</b> <span id="cliente"></span></p>
-<p><b>CURP:</b> <span id="curp"></span></p>
-<p><b>NSS:</b> <span id="nss"></span></p>
-<p><b>Teléfono:</b> <span id="telefono"></span></p>
-<p><b>RFC:</b> <span id="rfc"></span></p>
-<p><b>Correo:</b> <span id="correo"></span></p>
-
-<br>
-
-<p><b>SBC:</b> <span id="sbc"></span></p>
-<p><b>Semanas:</b> <span id="semanas"></span></p>
-<p><b>Edad retiro:</b> <span id="edad"></span></p>
-
-<br>
-
-<button onclick="window.print()">
-Generar PDF
-</button>
+INSTITUTO MEXICANO DEL SEGURO SOCIAL<br>
+DIRECCIÓN DE PRESTACIONES ECONÓMICAS<br>
+ESTIMACIÓN DE PENSIÓN – LEY 73
 
 </div>
 
-<script>
+<div class="section">
 
-const params = new URLSearchParams(window.location.search);
+<div class="section-title">
+DATOS DEL ASEGURADO
+</div>
 
-document.getElementById("cliente").textContent = params.get("cliente") || "";
-document.getElementById("curp").textContent = params.get("curp") || "";
-document.getElementById("nss").textContent = params.get("nss") || "";
-document.getElementById("telefono").textContent = params.get("telefono") || "";
-document.getElementById("rfc").textContent = params.get("rfc") || "";
-document.getElementById("correo").textContent = params.get("correo") || "";
+<table>
 
-document.getElementById("sbc").textContent = params.get("sbc") || "";
-document.getElementById("semanas").textContent = params.get("semanas") || "";
+<tr>
+<td>Nombre</td>
+<td id="nombre"></td>
+</tr>
 
-</script>
+<tr>
+<td>CURP</td>
+<td id="curp"></td>
+</tr>
+
+<tr>
+<td>NSS</td>
+<td id="nss"></td>
+</tr>
+
+<tr>
+<td>SBC</td>
+<td id="sbc"></td>
+</tr>
+
+<tr>
+<td>Semanas Cotizadas</td>
+<td id="semanas"></td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+CÁLCULO DE PENSIÓN
+</div>
+
+<table>
+
+<tr class="highlight">
+<th>Concepto</th>
+<th>Anual</th>
+</tr>
+
+<tr>
+<td>Cuantía Básica</td>
+<td id="cb"></td>
+</tr>
+
+<tr>
+<td>Incrementos por semanas</td>
+<td id="inc"></td>
+</tr>
+
+<tr>
+<td><b>Pensión Total</b></td>
+<td id="total"></td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+ESTIMACIÓN DE PENSIÓN POR EDAD
+</div>
+
+<table>
+
+<tr class="highlight">
+<th>Edad</th>
+<th>Pensión anual</th>
+</tr>
+
+<tr>
+<td>60 años</td>
+<td id="edad60"></td>
+</tr>
+
+<tr>
+<td>61 años</td>
+<td id="edad61"></td>
+</tr>
+
+<tr>
+<td>62 años</td>
+<td id="edad62"></td>
+</tr>
+
+<tr>
+<td>63 años</td>
+<td id="edad63"></td>
+</tr>
+
+<tr>
+<td>64 años</td>
+<td id="edad64"></td>
+</tr>
+
+<tr>
+<td>65 años</td>
+<td id="edad65"></td>
+</tr>
+
+</table>
+
+</div>
+
+<button class="print" onclick="window.print()">
+Descargar PDF
+</button>
 
 </body>
 </html>
