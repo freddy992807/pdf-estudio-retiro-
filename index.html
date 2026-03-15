@@ -105,10 +105,10 @@ return "$"+(Number(x)/12).toLocaleString();
 
 function getParametro(nombre){
 const url=new URL(window.location.href);
-return url.searchParams.get(nombre);
+return decodeURIComponent(url.searchParams.get(nombre));
 }
 
-const clienteNombre=getParametro("id_cliente");
+const clienteBuscado=getParametro("id_cliente");
 
 async function cargarCliente(){
 
@@ -121,7 +121,10 @@ text=text.substring(47).slice(0,-2);
 
 const json=JSON.parse(text);
 
-const headers=json.table.cols.map(c=>c.label);
+const headers=json.table.cols.map(c =>
+c.label.toLowerCase().trim().replace(/\s+/g,'_')
+);
+
 const rows=json.table.rows;
 
 let cliente=null;
@@ -136,7 +139,7 @@ obj[headers[i]]=cell?cell.v:"";
 
 });
 
-if(obj.nombre==clienteNombre){
+if(obj.nombre===clienteBuscado){
 
 cliente=obj;
 
@@ -145,8 +148,11 @@ cliente=obj;
 });
 
 if(!cliente){
+
 alert("Cliente no encontrado");
+
 return;
+
 }
 
 llenar(cliente);
@@ -172,8 +178,8 @@ document.getElementById("ayuda_esposa").innerHTML=money(data.ayu_espo);
 document.getElementById("ayuda_hijos").innerHTML=money(data.ayu_hijos);
 document.getElementById("ayuda_total").innerHTML=money(data.total_ayudas);
 
-document.getElementById("cb_anual").innerHTML=money(data.CB_anual);
-document.getElementById("inc_total").innerHTML=money(data.INC_total);
+document.getElementById("cb_anual").innerHTML=money(data.cb_anual);
+document.getElementById("inc_total").innerHTML=money(data.inc_total);
 document.getElementById("reforma_total").innerHTML=money(data.total_reforma);
 document.getElementById("pension_final").innerHTML=money(data.total_reforma);
 
@@ -311,6 +317,10 @@ PROYECCIÓN DE PENSIÓN POR EDAD
 
 <button class="print" onclick="window.print()">Descargar PDF</button>
 
+</div>
+
+</body>
+</html>
 </div>
 
 </body>
