@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-
 <html>
+
 <head>
 <meta charset="UTF-8">
 <title>Estimación de Pensión Ley 73</title>
@@ -60,6 +60,15 @@ background:#e6e6e6;
 text-align:right;
 }
 
+.print{
+margin-top:20px;
+padding:10px;
+background:#123a63;
+color:white;
+border:none;
+cursor:pointer;
+}
+
 .page-break{
 page-break-after:always;
 }
@@ -73,6 +82,10 @@ background:white;
 .page{
 box-shadow:none;
 margin:0;
+}
+
+.print{
+display:none;
 }
 
 }
@@ -89,61 +102,118 @@ function mensual(x){
 return "$"+(Number(x)/12).toLocaleString();
 }
 
-window.addEventListener("message", function(event){
-
-let data = event.data;
-
-if(typeof data === "string"){
-data = JSON.parse(data);
+function getParametro(nombre){
+const url=new URL(window.location.href);
+return url.searchParams.get(nombre);
 }
 
-let id = data.id_cliente;
+const id_cliente=getParametro("id_cliente");
 
-fetch("https://opensheet.elk.sh/179os4g9f0pTPW_vSa7hkr9ZVtc-qzPp1tSMROuVZ4zI/clientes")
+async function cargarCliente(){
 
-.then(res => res.json())
+const url="https://docs.google.com/spreadsheets/d/179os4g9f0pTPW_vSa7hkr9ZVtc-qzPp1tSMROuVZ4zI/gviz/tq?tqx=out:json";
 
-.then(rows => {
+const res=await fetch(url);
+let text=await res.text();
 
-let c = rows.find(r => r.id_cliente == id);
+text=text.substring(47).slice(0,-2);
+const json=JSON.parse(text);
 
-document.getElementById("nombre").innerHTML=c.nombre;
-document.getElementById("curp").innerHTML=c.curp;
-document.getElementById("nss").innerHTML=c.nss;
+const rows=json.table.rows;
 
-document.getElementById("sbc").innerHTML=money(c.sbc);
-document.getElementById("uma").innerHTML=c.sbc_uma;
-document.getElementById("semanas").innerHTML=c.semanas;
+let cliente=null;
 
-document.getElementById("por_cb").innerHTML=c.cuantia_basica+"%";
-document.getElementById("por_inc").innerHTML=c.incremento_anual+"%";
-document.getElementById("excedente").innerHTML=c.excedente_semanas;
-document.getElementById("num_inc").innerHTML=c.incrementos_anuales;
+rows.forEach(r=>{
 
-document.getElementById("ayuda_esposa").innerHTML=money(c.ayu_espo);
-document.getElementById("ayuda_hijos").innerHTML=money(c.ayu_hijos);
-document.getElementById("ayuda_total").innerHTML=money(c.total_ayudas);
+let row=r.c.map(x=>x?x.v:"");
 
-document.getElementById("cb_anual").innerHTML=money(c.CB_anual);
-document.getElementById("inc_total").innerHTML=money(c.INC_total);
+if(row[0]==id_cliente){
+cliente=row;
+}
 
-document.getElementById("reforma_total").innerHTML=money(c.total_reforma);
-document.getElementById("pension_final").innerHTML=money(c.total_reforma);
+});
+
+if(!cliente){
+alert("Cliente no encontrado");
+return;
+}
+
+/* MAPEO COLUMNAS */
+
+let data={
+
+nombre:cliente[1],
+curp:cliente[2],
+nss:cliente[3],
+sbc:cliente[4],
+uma:cliente[5],
+semanas:cliente[6],
+
+por_cb:cliente[7],
+por_inc:cliente[8],
+excedente:cliente[9],
+num_inc:cliente[10],
+
+ayuda_esposa:cliente[11],
+ayuda_hijos:cliente[12],
+ayuda_total:cliente[13],
+
+cb_anual:cliente[14],
+inc_total:cliente[15],
+reforma_total:cliente[16],
+pension_final:cliente[17],
+
+edad60:cliente[18],
+edad61:cliente[19],
+edad62:cliente[20],
+edad63:cliente[21],
+edad64:cliente[22],
+edad65:cliente[23]
+
+};
+
+llenar(data);
+
+}
+
+function llenar(data){
+
+document.getElementById("nombre").innerHTML=data.nombre;
+document.getElementById("curp").innerHTML=data.curp;
+document.getElementById("nss").innerHTML=data.nss;
+
+document.getElementById("sbc").innerHTML=money(data.sbc);
+document.getElementById("uma").innerHTML=data.uma;
+document.getElementById("semanas").innerHTML=data.semanas;
+
+document.getElementById("por_cb").innerHTML=data.por_cb+"%";
+document.getElementById("por_inc").innerHTML=data.por_inc+"%";
+document.getElementById("excedente").innerHTML=data.excedente;
+document.getElementById("num_inc").innerHTML=data.num_inc;
+
+document.getElementById("ayuda_esposa").innerHTML=money(data.ayuda_esposa);
+document.getElementById("ayuda_hijos").innerHTML=money(data.ayuda_hijos);
+document.getElementById("ayuda_total").innerHTML=money(data.ayuda_total);
+
+document.getElementById("cb_anual").innerHTML=money(data.cb_anual);
+document.getElementById("inc_total").innerHTML=money(data.inc_total);
+document.getElementById("reforma_total").innerHTML=money(data.reforma_total);
+document.getElementById("pension_final").innerHTML=money(data.pension_final);
 
 let edades=[60,61,62,63,64,65];
 
 edades.forEach(e=>{
 
-let anual=c["edad_"+e];
+let anual=data["edad"+e];
 
 document.getElementById("edad"+e+"_anual").innerHTML=money(anual);
 document.getElementById("edad"+e+"_mensual").innerHTML=mensual(anual);
 
 });
 
-});
+}
 
-});
+window.onload=cargarCliente;
 
 </script>
 
@@ -154,15 +224,15 @@ document.getElementById("edad"+e+"_mensual").innerHTML=mensual(anual);
 <div class="page">
 
 <div class="header">
-
 DESPACHO PARA PENSIONES<br>
 ESTIMACIÓN DE PENSIÓN LEY 73
-
 </div>
 
 <div class="section">
 
-<div class="section-title">DATOS DEL ASEGURADO</div>
+<div class="section-title">
+DATOS DEL ASEGURADO
+</div>
 
 <table>
 
@@ -179,7 +249,9 @@ ESTIMACIÓN DE PENSIÓN LEY 73
 
 <div class="section">
 
-<div class="section-title">VARIABLES DE CÁLCULO</div>
+<div class="section-title">
+VARIABLES DE CÁLCULO
+</div>
 
 <table>
 
@@ -197,7 +269,9 @@ ESTIMACIÓN DE PENSIÓN LEY 73
 
 <div class="section">
 
-<div class="section-title">AYUDAS ASISTENCIALES</div>
+<div class="section-title">
+AYUDAS ASISTENCIALES
+</div>
 
 <table>
 
@@ -205,7 +279,7 @@ ESTIMACIÓN DE PENSIÓN LEY 73
 
 <tr><td>Ayuda por Esposa</td><td class="money" id="ayuda_esposa"></td></tr>
 <tr><td>Ayuda por Hijos</td><td class="money" id="ayuda_hijos"></td></tr>
-<tr><td>Total Ayudas</td><td class="money" id="ayuda_total"></td></tr>
+<tr><td><b>Total Ayudas</b></td><td class="money" id="ayuda_total"></td></tr>
 
 </table>
 
@@ -213,7 +287,9 @@ ESTIMACIÓN DE PENSIÓN LEY 73
 
 <div class="section">
 
-<div class="section-title">CÁLCULO DE PENSIÓN</div>
+<div class="section-title">
+CÁLCULO DE PENSIÓN
+</div>
 
 <table>
 
@@ -221,8 +297,8 @@ ESTIMACIÓN DE PENSIÓN LEY 73
 
 <tr><td>Cuantía Básica</td><td class="money" id="cb_anual"></td></tr>
 <tr><td>Incrementos por Semanas</td><td class="money" id="inc_total"></td></tr>
-<tr><td>Total Ayudas</td><td class="money" id="ayuda_total"></td></tr>
-<tr><td>Total Reforma 2004</td><td class="money" id="reforma_total"></td></tr>
+<tr><td>Total Ayudas Asistenciales</td><td class="money" id="ayuda_total"></td></tr>
+<tr><td>Total Reforma 2004 (+11%)</td><td class="money" id="reforma_total"></td></tr>
 <tr><td><b>Pensión Total Final</b></td><td class="money" id="pension_final"></td></tr>
 
 </table>
@@ -236,10 +312,10 @@ ESTIMACIÓN DE PENSIÓN LEY 73
 <div class="page">
 
 <div class="header">
-
 PROYECCIÓN DE PENSIÓN POR EDAD
-
 </div>
+
+<div class="section">
 
 <table>
 
@@ -249,20 +325,25 @@ PROYECCIÓN DE PENSIÓN POR EDAD
 <th>Pensión mensual</th>
 </tr>
 
-<tr><td>60 años</td><td id="edad60_anual"></td><td id="edad60_mensual"></td></tr>
-<tr><td>61 años</td><td id="edad61_anual"></td><td id="edad61_mensual"></td></tr>
-<tr><td>62 años</td><td id="edad62_anual"></td><td id="edad62_mensual"></td></tr>
-<tr><td>63 años</td><td id="edad63_anual"></td><td id="edad63_mensual"></td></tr>
-<tr><td>64 años</td><td id="edad64_anual"></td><td id="edad64_mensual"></td></tr>
-<tr><td>65 años</td><td id="edad65_anual"></td><td id="edad65_mensual"></td></tr>
+<tr><td>60 años</td><td class="money" id="edad60_anual"></td><td class="money" id="edad60_mensual"></td></tr>
+<tr><td>61 años</td><td class="money" id="edad61_anual"></td><td class="money" id="edad61_mensual"></td></tr>
+<tr><td>62 años</td><td class="money" id="edad62_anual"></td><td class="money" id="edad62_mensual"></td></tr>
+<tr><td>63 años</td><td class="money" id="edad63_anual"></td><td class="money" id="edad63_mensual"></td></tr>
+<tr><td>64 años</td><td class="money" id="edad64_anual"></td><td class="money" id="edad64_mensual"></td></tr>
+<tr><td>65 años</td><td class="money" id="edad65_anual"></td><td class="money" id="edad65_mensual"></td></tr>
 
 </table>
 
 </div>
 
+<button class="print" onclick="window.print()">
+Descargar PDF
+</button>
+
+</div>
+
 </body>
 </html>
-
 </div>
 
 </body>
