@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <meta charset="UTF-8">
 <title>Estimación de Pensión Ley 73</title>
@@ -94,21 +95,19 @@ display:none;
 <script>
 
 function money(x){
-if(!x)return "$0";
 return "$"+Number(x).toLocaleString();
 }
 
 function mensual(x){
-if(!x)return "$0";
 return "$"+(Number(x)/12).toLocaleString();
 }
 
 function getParametro(nombre){
 const url=new URL(window.location.href);
-return decodeURIComponent(url.searchParams.get(nombre));
+return url.searchParams.get(nombre);
 }
 
-const clienteBuscado=getParametro("id_cliente");
+const id_cliente=getParametro("id_cliente");
 
 async function cargarCliente(){
 
@@ -118,12 +117,7 @@ const res=await fetch(url);
 let text=await res.text();
 
 text=text.substring(47).slice(0,-2);
-
 const json=JSON.parse(text);
-
-const headers=json.table.cols.map(c =>
-c.label.toLowerCase().trim().replace(/\s+/g,'_')
-);
 
 const rows=json.table.rows;
 
@@ -131,31 +125,54 @@ let cliente=null;
 
 rows.forEach(r=>{
 
-let obj={};
+let row=r.c.map(x=>x?x.v:"");
 
-r.c.forEach((cell,i)=>{
-
-obj[headers[i]]=cell?cell.v:"";
-
-});
-
-if(obj.nombre===clienteBuscado){
-
-cliente=obj;
-
+if(row[0]==id_cliente){
+cliente=row;
 }
 
 });
 
 if(!cliente){
-
 alert("Cliente no encontrado");
-
 return;
-
 }
 
-llenar(cliente);
+/* MAPEO COLUMNAS */
+
+let data={
+
+nombre:cliente[1],
+curp:cliente[2],
+nss:cliente[3],
+sbc:cliente[4],
+uma:cliente[5],
+semanas:cliente[6],
+
+por_cb:cliente[7],
+por_inc:cliente[8],
+excedente:cliente[9],
+num_inc:cliente[10],
+
+ayuda_esposa:cliente[11],
+ayuda_hijos:cliente[12],
+ayuda_total:cliente[13],
+
+cb_anual:cliente[14],
+inc_total:cliente[15],
+reforma_total:cliente[16],
+pension_final:cliente[17],
+
+edad60:cliente[18],
+edad61:cliente[19],
+edad62:cliente[20],
+edad63:cliente[21],
+edad64:cliente[22],
+edad65:cliente[23]
+
+};
+
+llenar(data);
 
 }
 
@@ -166,28 +183,28 @@ document.getElementById("curp").innerHTML=data.curp;
 document.getElementById("nss").innerHTML=data.nss;
 
 document.getElementById("sbc").innerHTML=money(data.sbc);
-document.getElementById("uma").innerHTML=data.sbc_uma;
+document.getElementById("uma").innerHTML=data.uma;
 document.getElementById("semanas").innerHTML=data.semanas;
 
-document.getElementById("por_cb").innerHTML=data.cuantia_basica+"%";
-document.getElementById("por_inc").innerHTML=data.incremento_anual+"%";
-document.getElementById("excedente").innerHTML=data.excedente_semanas;
-document.getElementById("num_inc").innerHTML=data.incrementos_anuales;
+document.getElementById("por_cb").innerHTML=data.por_cb+"%";
+document.getElementById("por_inc").innerHTML=data.por_inc+"%";
+document.getElementById("excedente").innerHTML=data.excedente;
+document.getElementById("num_inc").innerHTML=data.num_inc;
 
-document.getElementById("ayuda_esposa").innerHTML=money(data.ayu_espo);
-document.getElementById("ayuda_hijos").innerHTML=money(data.ayu_hijos);
-document.getElementById("ayuda_total").innerHTML=money(data.total_ayudas);
+document.getElementById("ayuda_esposa").innerHTML=money(data.ayuda_esposa);
+document.getElementById("ayuda_hijos").innerHTML=money(data.ayuda_hijos);
+document.getElementById("ayuda_total").innerHTML=money(data.ayuda_total);
 
 document.getElementById("cb_anual").innerHTML=money(data.cb_anual);
 document.getElementById("inc_total").innerHTML=money(data.inc_total);
-document.getElementById("reforma_total").innerHTML=money(data.total_reforma);
-document.getElementById("pension_final").innerHTML=money(data.total_reforma);
+document.getElementById("reforma_total").innerHTML=money(data.reforma_total);
+document.getElementById("pension_final").innerHTML=money(data.pension_final);
 
 let edades=[60,61,62,63,64,65];
 
 edades.forEach(e=>{
 
-let anual=data["edad_"+e];
+let anual=data["edad"+e];
 
 document.getElementById("edad"+e+"_anual").innerHTML=money(anual);
 document.getElementById("edad"+e+"_mensual").innerHTML=mensual(anual);
@@ -298,6 +315,8 @@ CÁLCULO DE PENSIÓN
 PROYECCIÓN DE PENSIÓN POR EDAD
 </div>
 
+<div class="section">
+
 <table>
 
 <tr>
@@ -306,21 +325,21 @@ PROYECCIÓN DE PENSIÓN POR EDAD
 <th>Pensión mensual</th>
 </tr>
 
-<tr><td>60 años</td><td id="edad60_anual"></td><td id="edad60_mensual"></td></tr>
-<tr><td>61 años</td><td id="edad61_anual"></td><td id="edad61_mensual"></td></tr>
-<tr><td>62 años</td><td id="edad62_anual"></td><td id="edad62_mensual"></td></tr>
-<tr><td>63 años</td><td id="edad63_anual"></td><td id="edad63_mensual"></td></tr>
-<tr><td>64 años</td><td id="edad64_anual"></td><td id="edad64_mensual"></td></tr>
-<tr><td>65 años</td><td id="edad65_anual"></td><td id="edad65_mensual"></td></tr>
+<tr><td>60 años</td><td class="money" id="edad60_anual"></td><td class="money" id="edad60_mensual"></td></tr>
+<tr><td>61 años</td><td class="money" id="edad61_anual"></td><td class="money" id="edad61_mensual"></td></tr>
+<tr><td>62 años</td><td class="money" id="edad62_anual"></td><td class="money" id="edad62_mensual"></td></tr>
+<tr><td>63 años</td><td class="money" id="edad63_anual"></td><td class="money" id="edad63_mensual"></td></tr>
+<tr><td>64 años</td><td class="money" id="edad64_anual"></td><td class="money" id="edad64_mensual"></td></tr>
+<tr><td>65 años</td><td class="money" id="edad65_anual"></td><td class="money" id="edad65_mensual"></td></tr>
 
 </table>
 
-<button class="print" onclick="window.print()">Descargar PDF</button>
-
 </div>
 
-</body>
-</html>
+<button class="print" onclick="window.print()">
+Descargar PDF
+</button>
+
 </div>
 
 </body>
