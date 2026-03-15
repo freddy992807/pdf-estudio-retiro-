@@ -125,7 +125,10 @@ let cliente=null;
 
 rows.forEach(r=>{
 
-let row=r.c.map(x => x ? (x.v ?? x.f ?? x.formattedValue ?? "") : "");
+let row = [];
+for (let i = 0; i < json.table.cols.length; i++) {
+    row[i] = r.c[i] ? r.c[i].v : "";
+}
   
 if(row[2]==id_cliente){
 cliente=row;
