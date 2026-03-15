@@ -1,115 +1,25 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 <meta charset="UTF-8">
 <title>Estimación de Pensión Ley 73</title>
 
-<style>
-
-body{
-font-family:Arial;
-background:#e5e5e5;
-}
-
-.page{
-width:816px;
-height:1056px;
-background:white;
-margin:auto;
-padding:40px;
-box-shadow:0 0 10px rgba(0,0,0,0.2);
-margin-bottom:20px;
-}
-
-.header{
-text-align:center;
-font-size:20px;
-font-weight:bold;
-margin-bottom:25px;
-}
-
-.section{
-border:1px solid #000;
-margin-top:18px;
-}
-
-.section-title{
-background:#123a63;
-color:white;
-padding:6px;
-font-weight:bold;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-td,th{
-border:1px solid #000;
-padding:6px;
-font-size:13px;
-}
-
-th{
-background:#e6e6e6;
-}
-
-.money{
-text-align:right;
-}
-
-.print{
-margin-top:20px;
-padding:10px;
-background:#123a63;
-color:white;
-border:none;
-cursor:pointer;
-}
-
-.page-break{
-page-break-after:always;
-}
-
-@media print{
-
-body{
-background:white;
-}
-
-.page{
-box-shadow:none;
-margin:0;
-}
-
-.print{
-display:none;
-}
-
-}
-
-</style>
-
 <script>
 
 function money(x){
-if(!x)return "$0";
 return "$"+Number(x).toLocaleString();
 }
 
 function mensual(x){
-if(!x)return "$0";
 return "$"+(Number(x)/12).toLocaleString();
 }
 
 function getParametro(nombre){
 const url=new URL(window.location.href);
-return url.searchParams.get(nombre);
+return decodeURIComponent(url.searchParams.get(nombre));
 }
 
-const id_cliente=getParametro("id_cliente");
+const clienteBuscado=getParametro("id_cliente");
 
 async function cargarCliente(){
 
@@ -122,8 +32,8 @@ text=text.substring(47).slice(0,-2);
 
 const json=JSON.parse(text);
 
-const rows=json.table.rows;
 const headers=json.table.cols.map(c=>c.label);
+const rows=json.table.rows;
 
 let cliente=null;
 
@@ -132,18 +42,25 @@ rows.forEach(r=>{
 let obj={};
 
 r.c.forEach((cell,i)=>{
+
 obj[headers[i]]=cell?cell.v:"";
+
 });
 
-if(obj.nombre==id_cliente){
+if(obj.nombre===clienteBuscado){
+
 cliente=obj;
+
 }
 
 });
 
 if(!cliente){
+
 alert("Cliente no encontrado");
+
 return;
+
 }
 
 llenar(cliente);
@@ -194,25 +111,15 @@ window.onload=cargarCliente;
 </head>
 
 <body>
-<tr><td>60 años</td><td class="money" id="edad60_anual"></td><td class="money" id="edad60_mensual"></td></tr>
-<tr><td>61 años</td><td class="money" id="edad61_anual"></td><td class="money" id="edad61_mensual"></td></tr>
-<tr><td>62 años</td><td class="money" id="edad62_anual"></td><td class="money" id="edad62_mensual"></td></tr>
-<tr><td>63 años</td><td class="money" id="edad63_anual"></td><td class="money" id="edad63_mensual"></td></tr>
-<tr><td>64 años</td><td class="money" id="edad64_anual"></td><td class="money" id="edad64_mensual"></td></tr>
-<tr><td>65 años</td><td class="money" id="edad65_anual"></td><td class="money" id="edad65_mensual"></td></tr>
 
-</table>
+<h2>Estimación de Pensión Ley 73</h2>
 
-</div>
+<div>
 
-<button class="print" onclick="window.print()">
-Descargar PDF
-</button>
+Nombre: <span id="nombre"></span><br>
+CURP: <span id="curp"></span><br>
+NSS: <span id="nss"></span><br>
 
-</div>
-
-</body>
-</html>
 </div>
 
 </body>
