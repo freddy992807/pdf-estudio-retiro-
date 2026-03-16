@@ -94,12 +94,14 @@ display:none;
 
 <script>
 
+/* 2 DECIMALES EN TODO */
+
 function money(x){
-return "$"+Number(x).toLocaleString();
+return "$"+Number(x).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 
 function mensual(x){
-return "$"+(Number(x)/12).toLocaleString();
+return "$"+(Number(x)/12).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 
 function getParametro(nombre){
@@ -190,8 +192,11 @@ document.getElementById("sbc").innerHTML=money(data.sbc);
 document.getElementById("uma").innerHTML=data.uma;
 document.getElementById("semanas").innerHTML=data.semanas;
 
-document.getElementById("por_cb").innerHTML=data.por_cb+"%";
-document.getElementById("por_inc").innerHTML=data.por_inc+"%";
+/* CORRECCION PORCENTAJES */
+
+document.getElementById("por_cb").innerHTML=(data.por_cb*100).toFixed(2)+"%";
+document.getElementById("por_inc").innerHTML=(data.por_inc*100).toFixed(2)+"%";
+
 document.getElementById("excedente").innerHTML=data.excedente;
 document.getElementById("num_inc").innerHTML=data.num_inc;
 
