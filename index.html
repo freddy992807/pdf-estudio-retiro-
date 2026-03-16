@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 
@@ -126,12 +127,16 @@ alert("Cliente no encontrado");
 return;
 }
 
+function num(i){
+return cliente[i] ? Number(cliente[i].v) : 0;
+}
+
 function val(i){
 return cliente[i] ? (cliente[i].f ?? cliente[i].v) : "";
 }
 
-function num(i){
-return cliente[i] ? Number(cliente[i].v) : 0;
+function money(x){
+return "$"+x.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 
 /* DATOS */
@@ -148,21 +153,24 @@ document.getElementById("semanas").innerHTML=val(9);
 
 document.getElementById("por_cb").innerHTML=val(14);
 document.getElementById("por_inc").innerHTML=val(15);
-
 document.getElementById("excedente").innerHTML=val(16);
 document.getElementById("num_inc").innerHTML=val(17);
 
-/* VALORES BASE */
-
-let cuantia = num(19);
-let incrementos = num(22);
+/* AYUDAS */
 
 let ayuda_esposa = num(23);
 let ayuda_hijos = num(24);
 
-/* CALCULOS */
-
 let ayudas_total = ayuda_esposa + ayuda_hijos;
+
+document.getElementById("ayuda_esposa").innerHTML=money(ayuda_esposa);
+document.getElementById("ayuda_hijos").innerHTML=money(ayuda_hijos);
+document.getElementById("ayuda_total").innerHTML=money(ayudas_total);
+
+/* CALCULO PENSION */
+
+let cuantia = num(19);
+let incrementos = num(22);
 
 let subtotal = cuantia + incrementos + ayudas_total;
 
@@ -170,23 +178,10 @@ let reforma = subtotal * 0.11;
 
 let pension_total = subtotal + reforma;
 
-/* MOSTRAR AYUDAS */
-
-document.getElementById("ayuda_esposa").innerHTML="$"+ayuda_esposa.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-
-document.getElementById("ayuda_hijos").innerHTML="$"+ayuda_hijos.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-
-document.getElementById("ayuda_total").innerHTML="$"+ayudas_total.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-
-/* CALCULO PENSION */
-
-document.getElementById("cb_anual").innerHTML="$"+cuantia.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-
-document.getElementById("inc_total").innerHTML="$"+incrementos.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-
-document.getElementById("reforma_total").innerHTML="$"+reforma.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-
-document.getElementById("pension_final").innerHTML="$"+pension_total.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+document.getElementById("cb_anual").innerHTML=money(cuantia);
+document.getElementById("inc_total").innerHTML=money(incrementos);
+document.getElementById("reforma_total").innerHTML=money(reforma);
+document.getElementById("pension_final").innerHTML=money(pension_total);
 
 /* PROYECCION EDAD */
 
@@ -194,13 +189,13 @@ let edades=[60,61,62,63,64,65];
 
 edades.forEach((e,i)=>{
 
-let anual = num(28+i);
+let mensual = num(28+i);
 
-document.getElementById("edad"+e+"_anual").innerHTML="$"+anual.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+document.getElementById("edad"+e+"_mensual").innerHTML=money(mensual);
 
-let mensual = anual / 12;
+let viudez = mensual * 0.9;
 
-document.getElementById("edad"+e+"_mensual").innerHTML="$"+mensual.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+document.getElementById("edad"+e+"_viudez").innerHTML=money(viudez);
 
 });
 
@@ -314,16 +309,16 @@ PROYECCIÓN DE PENSIÓN POR EDAD
 
 <tr>
 <th>Edad</th>
-<th>Pensión anual</th>
 <th>Pensión mensual</th>
+<th>Pensión viudez (90%)</th>
 </tr>
 
-<tr><td>60 años</td><td class="money" id="edad60_anual"></td><td class="money" id="edad60_mensual"></td></tr>
-<tr><td>61 años</td><td class="money" id="edad61_anual"></td><td class="money" id="edad61_mensual"></td></tr>
-<tr><td>62 años</td><td class="money" id="edad62_anual"></td><td class="money" id="edad62_mensual"></td></tr>
-<tr><td>63 años</td><td class="money" id="edad63_anual"></td><td class="money" id="edad63_mensual"></td></tr>
-<tr><td>64 años</td><td class="money" id="edad64_anual"></td><td class="money" id="edad64_mensual"></td></tr>
-<tr><td>65 años</td><td class="money" id="edad65_anual"></td><td class="money" id="edad65_mensual"></td></tr>
+<tr><td>60 años</td><td class="money" id="edad60_mensual"></td><td class="money" id="edad60_viudez"></td></tr>
+<tr><td>61 años</td><td class="money" id="edad61_mensual"></td><td class="money" id="edad61_viudez"></td></tr>
+<tr><td>62 años</td><td class="money" id="edad62_mensual"></td><td class="money" id="edad62_viudez"></td></tr>
+<tr><td>63 años</td><td class="money" id="edad63_mensual"></td><td class="money" id="edad63_viudez"></td></tr>
+<tr><td>64 años</td><td class="money" id="edad64_mensual"></td><td class="money" id="edad64_viudez"></td></tr>
+<tr><td>65 años</td><td class="money" id="edad65_mensual"></td><td class="money" id="edad65_viudez"></td></tr>
 
 </table>
 
@@ -337,3 +332,4 @@ Descargar PDF
 
 </body>
 </html>
+```
