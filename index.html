@@ -94,52 +94,6 @@ display:none;
 
 <script>
 
-/* =========================
-FORMATEO DINERO 2 DECIMALES
-========================= */
-
-function money(x){
-
-x = Number(x) || 0;
-
-return "$"+x.toLocaleString("en-US",{
-minimumFractionDigits:2,
-maximumFractionDigits:2
-});
-
-}
-
-/* =========================
-CALCULO MENSUAL
-========================= */
-
-function mensual(x){
-
-x = Number(x) || 0;
-
-let m = x/12;
-
-return "$"+m.toLocaleString("en-US",{
-minimumFractionDigits:2,
-maximumFractionDigits:2
-});
-
-}
-
-/* =========================
-FORMATO PORCENTAJE
-========================= */
-
-function porcentaje(x){
-
-x = Number(x) || 0;
-
-return (x*100).toFixed(2)+"%";
-
-}
-
-/* ========================= */
-
 function getParametro(nombre){
 const url=new URL(window.location.href);
 return url.searchParams.get(nombre);
@@ -163,16 +117,16 @@ let cliente=null;
 
 rows.forEach(r=>{
 
-let row = [];
+let row=[];
 
-for (let i = 0; i < json.table.cols.length; i++) {
+for(let i=0;i<json.table.cols.length;i++){
 
-row[i] = r.c[i] ? r.c[i].v : "";
+row[i]=r.c[i] ? (r.c[i].f ?? r.c[i].v) : "";
 
 }
 
-if(row[2]==id_cliente){
-cliente=row;
+if(r.c[2] && r.c[2].v==id_cliente){
+cliente=r.c;
 }
 
 });
@@ -182,90 +136,61 @@ alert("Cliente no encontrado");
 return;
 }
 
-/* =========================
-MAPEO COLUMNAS
-========================= */
-
-let data={
-
-nombre:cliente[0] || "",
-curp:cliente[1] || "",
-nss:cliente[2],
-
-sbc:Number(cliente[8]),
-uma:cliente[13],
-semanas:Number(cliente[9]),
-
-por_cb:Number(cliente[14]),
-por_inc:Number(cliente[15]),
-excedente:Number(cliente[16]),
-num_inc:Number(cliente[17]),
-
-ayuda_esposa:Number(cliente[23]),
-ayuda_hijos:Number(cliente[24]),
-ayuda_total:Number(cliente[26]),
-
-cb_anual:Number(cliente[19]),
-inc_total:Number(cliente[22]),
-reforma_total:Number(cliente[27]),
-pension_final:Number(cliente[27]),
-
-edad60:Number(cliente[28]),
-edad61:Number(cliente[29]),
-edad62:Number(cliente[30]),
-edad63:Number(cliente[31]),
-edad64:Number(cliente[32]),
-edad65:Number(cliente[33])
-
-};
-
-llenar(data);
-
+function val(i){
+return cliente[i] ? (cliente[i].f ?? cliente[i].v) : "";
 }
 
-/* ========================= */
+function num(i){
+return cliente[i] ? Number(cliente[i].v) : 0;
+}
 
-function llenar(data){
+/* DATOS */
 
-document.getElementById("nombre").innerHTML=data.nombre;
-document.getElementById("curp").innerHTML=data.curp;
-document.getElementById("nss").innerHTML=data.nss;
+document.getElementById("nombre").innerHTML=val(0);
+document.getElementById("curp").innerHTML=val(1);
+document.getElementById("nss").innerHTML=val(2);
 
-document.getElementById("sbc").innerHTML=money(data.sbc);
-document.getElementById("uma").innerHTML=data.uma;
-document.getElementById("semanas").innerHTML=data.semanas;
+document.getElementById("sbc").innerHTML=val(8);
+document.getElementById("uma").innerHTML=val(13);
+document.getElementById("semanas").innerHTML=val(9);
 
 /* PORCENTAJES */
 
-document.getElementById("por_cb").innerHTML=porcentaje(data.por_cb);
-document.getElementById("por_inc").innerHTML=porcentaje(data.por_inc);
+document.getElementById("por_cb").innerHTML=val(14);
+document.getElementById("por_inc").innerHTML=val(15);
 
-document.getElementById("excedente").innerHTML=data.excedente;
-document.getElementById("num_inc").innerHTML=data.num_inc;
+document.getElementById("excedente").innerHTML=val(16);
+document.getElementById("num_inc").innerHTML=val(17);
 
 /* AYUDAS */
 
-document.getElementById("ayuda_esposa").innerHTML=money(data.ayuda_esposa);
-document.getElementById("ayuda_hijos").innerHTML=money(data.ayuda_hijos);
-document.getElementById("ayuda_total").innerHTML=money(data.ayuda_total);
+document.getElementById("ayuda_esposa").innerHTML=val(23);
+document.getElementById("ayuda_hijos").innerHTML=val(24);
+document.getElementById("ayuda_total").innerHTML=val(26);
 
 /* CALCULO */
 
-document.getElementById("cb_anual").innerHTML=money(data.cb_anual);
-document.getElementById("inc_total").innerHTML=money(data.inc_total);
-document.getElementById("reforma_total").innerHTML=money(data.reforma_total);
-document.getElementById("pension_final").innerHTML=money(data.pension_final);
+document.getElementById("cb_anual").innerHTML=val(19);
+document.getElementById("inc_total").innerHTML=val(22);
+document.getElementById("reforma_total").innerHTML=val(27);
+document.getElementById("pension_final").innerHTML=val(27);
 
 /* PROYECCION EDADES */
 
 let edades=[60,61,62,63,64,65];
 
-edades.forEach(e=>{
+edades.forEach((e,i)=>{
 
-let anual = Number(data["edad"+e]) || 0;
+let anual=num(28+i);
 
-document.getElementById("edad"+e+"_anual").innerHTML=money(anual);
-document.getElementById("edad"+e+"_mensual").innerHTML=mensual(anual);
+document.getElementById("edad"+e+"_anual").innerHTML=cliente[28+i]?.f ?? anual;
+
+let mensual=anual/12;
+
+document.getElementById("edad"+e+"_mensual").innerHTML="$"+mensual.toLocaleString("en-US",{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+});
 
 });
 
@@ -398,10 +323,6 @@ PROYECCIÓN DE PENSIÓN POR EDAD
 Descargar PDF
 </button>
 
-</div>
-
-</body>
-</html>
 </div>
 
 </body>
