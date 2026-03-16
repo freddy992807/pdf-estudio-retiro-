@@ -7,90 +7,22 @@
 <title>Estimación de Pensión Ley 73</title>
 
 <style>
-
-body{
-font-family:Arial;
-background:#e5e5e5;
-}
-
-.page{
-width:816px;
-height:1056px;
-background:white;
-margin:auto;
-padding:40px;
-box-shadow:0 0 10px rgba(0,0,0,0.2);
-margin-bottom:20px;
-}
-
-.header{
-text-align:center;
-font-size:20px;
-font-weight:bold;
-margin-bottom:25px;
-}
-
-.section{
-border:1px solid #000;
-margin-top:18px;
-}
-
-.section-title{
-background:#123a63;
-color:white;
-padding:6px;
-font-weight:bold;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-td,th{
-border:1px solid #000;
-padding:6px;
-font-size:13px;
-}
-
-th{
-background:#e6e6e6;
-}
-
-.money{
-text-align:right;
-}
-
-.print{
-margin-top:20px;
-padding:10px;
-background:#123a63;
-color:white;
-border:none;
-cursor:pointer;
-}
-
-.page-break{
-page-break-after:always;
-}
-
+body{font-family:Arial;background:#e5e5e5;}
+.page{width:816px;height:1056px;background:white;margin:auto;padding:40px;box-shadow:0 0 10px rgba(0,0,0,0.2);margin-bottom:20px;}
+.header{text-align:center;font-size:20px;font-weight:bold;margin-bottom:25px;}
+.section{border:1px solid #000;margin-top:18px;}
+.section-title{background:#123a63;color:white;padding:6px;font-weight:bold;}
+table{width:100%;border-collapse:collapse;}
+td,th{border:1px solid #000;padding:6px;font-size:13px;}
+th{background:#e6e6e6;}
+.money{text-align:right;}
+.print{margin-top:20px;padding:10px;background:#123a63;color:white;border:none;cursor:pointer;}
+.page-break{page-break-after:always;}
 @media print{
-
-body{
-background:white;
+body{background:white;}
+.page{box-shadow:none;margin:0;}
+.print{display:none;}
 }
-
-.page{
-box-shadow:none;
-margin:0;
-}
-
-.print{
-display:none;
-}
-
-}
-
 </style>
 
 <script>
@@ -122,29 +54,17 @@ cliente=r.c;
 }
 });
 
-if(!cliente){
-alert("Cliente no encontrado");
-return;
-}
+if(!cliente){alert("Cliente no encontrado");return;}
 
-function num(i){
-return cliente[i] ? Number(cliente[i].v) : 0;
-}
-
-function val(i){
-return cliente[i] ? (cliente[i].f ?? cliente[i].v) : "";
-}
-
-function money(x){
-return "$"+x.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-}
+function num(i){return cliente[i]?Number(cliente[i].v):0;}
+function val(i){return cliente[i]?(cliente[i].f??cliente[i].v):"";}
+function money(x){return "$"+x.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
 
 /* DATOS */
 
 document.getElementById("nombre").innerHTML=val(0);
 document.getElementById("curp").innerHTML=val(1);
 document.getElementById("nss").innerHTML=val(2);
-
 document.getElementById("sbc").innerHTML=val(8);
 document.getElementById("uma").innerHTML=val(13);
 document.getElementById("semanas").innerHTML=val(9);
@@ -158,47 +78,45 @@ document.getElementById("num_inc").innerHTML=val(17);
 
 /* AYUDAS */
 
-let ayuda_esposa = num(23);
-let ayuda_hijos = num(24);
+let ayuda_esposa=num(23);
+let ayuda_hijos=num(24);
 
-let ayudas_total = ayuda_esposa + ayuda_hijos;
+let ayudas_total=ayuda_esposa+ayuda_hijos;
 
 document.getElementById("ayuda_esposa").innerHTML=money(ayuda_esposa);
 document.getElementById("ayuda_hijos").innerHTML=money(ayuda_hijos);
 
-/* LLENA TODAS LAS CELDAS CON id="ayuda_total" */
+/* LLENA TODAS LAS CELDAS QUE TIENEN id="ayuda_total" */
 
 document.querySelectorAll("#ayuda_total").forEach(el=>{
-el.innerHTML = money(ayudas_total);
+el.innerHTML=money(ayudas_total);
 });
 
-/* CALCULO PENSION */
+/* CALCULO */
 
-let cuantia = num(19);
-let incrementos = num(22);
+let cuantia=num(19);
+let incrementos=num(22);
 
-let subtotal = cuantia + incrementos + ayudas_total;
-
-let reforma = subtotal * 0.11;
-
-let pension_total = subtotal + reforma;
+let subtotal=cuantia+incrementos+ayudas_total;
+let reforma=subtotal*0.11;
+let pension_total=subtotal+reforma;
 
 document.getElementById("cb_anual").innerHTML=money(cuantia);
 document.getElementById("inc_total").innerHTML=money(incrementos);
 document.getElementById("reforma_total").innerHTML=money(reforma);
 document.getElementById("pension_final").innerHTML=money(pension_total);
 
-/* PROYECCION EDAD */
+/* PROYECCION */
 
 let edades=[60,61,62,63,64,65];
 
 edades.forEach((e,i)=>{
 
-let mensual = num(28+i);
+let mensual=num(28+i);
 
 document.getElementById("edad"+e+"_mensual").innerHTML=money(mensual);
 
-let viudez = mensual * 0.9;
+let viudez=mensual*0.9;
 
 document.getElementById("edad"+e+"_viudez").innerHTML=money(viudez);
 
@@ -222,80 +140,49 @@ ESTIMACIÓN DE PENSIÓN LEY 73
 </div>
 
 <div class="section">
-
-<div class="section-title">
-DATOS DEL ASEGURADO
-</div>
-
+<div class="section-title">DATOS DEL ASEGURADO</div>
 <table>
-
 <tr><td>Nombre</td><td id="nombre"></td></tr>
 <tr><td>CURP</td><td id="curp"></td></tr>
 <tr><td>NSS</td><td id="nss"></td></tr>
 <tr><td>SBC</td><td id="sbc"></td></tr>
 <tr><td>SBC en UMA</td><td id="uma"></td></tr>
 <tr><td>Semanas Cotizadas</td><td id="semanas"></td></tr>
-
 </table>
-
 </div>
 
 <div class="section">
-
-<div class="section-title">
-VARIABLES DE CÁLCULO
-</div>
-
+<div class="section-title">VARIABLES DE CÁLCULO</div>
 <table>
-
 <tr><th>Concepto</th><th>Valor</th></tr>
-
 <tr><td>Porcentaje de Cuantía Básica</td><td id="por_cb"></td></tr>
 <tr><td>Porcentaje de Incremento</td><td id="por_inc"></td></tr>
 <tr><td>Excedente de Semanas</td><td id="excedente"></td></tr>
 <tr><td>Número de Incrementos</td><td id="num_inc"></td></tr>
 <tr><td>Reforma 2004</td><td>11%</td></tr>
-
 </table>
-
 </div>
 
 <div class="section">
-
-<div class="section-title">
-AYUDAS ASISTENCIALES
-</div>
-
+<div class="section-title">AYUDAS ASISTENCIALES</div>
 <table>
-
 <tr><th>Concepto</th><th>Anual</th></tr>
-
 <tr><td>Ayuda por Esposa</td><td class="money" id="ayuda_esposa"></td></tr>
 <tr><td>Ayuda por Hijos</td><td class="money" id="ayuda_hijos"></td></tr>
 <tr><td><b>Total Ayudas</b></td><td class="money" id="ayuda_total"></td></tr>
-
 </table>
-
 </div>
 
 <div class="section">
-
-<div class="section-title">
-CÁLCULO DE PENSIÓN
-</div>
-
+<div class="section-title">CÁLCULO DE PENSIÓN</div>
 <table>
-
 <tr><th>Concepto</th><th>Anual</th></tr>
-
 <tr><td>Cuantía Básica</td><td class="money" id="cb_anual"></td></tr>
 <tr><td>Incrementos por Semanas</td><td class="money" id="inc_total"></td></tr>
 <tr><td>Total Ayudas Asistenciales</td><td class="money" id="ayuda_total"></td></tr>
 <tr><td>Total Reforma 2004 (+11%)</td><td class="money" id="reforma_total"></td></tr>
 <tr><td><b>Pensión Total Final</b></td><td class="money" id="pension_final"></td></tr>
-
 </table>
-
 </div>
 
 </div>
@@ -304,14 +191,10 @@ CÁLCULO DE PENSIÓN
 
 <div class="page">
 
-<div class="header">
-PROYECCIÓN DE PENSIÓN POR EDAD
-</div>
+<div class="header">PROYECCIÓN DE PENSIÓN POR EDAD</div>
 
 <div class="section">
-
 <table>
-
 <tr>
 <th>Edad</th>
 <th>Pensión mensual</th>
@@ -326,12 +209,9 @@ PROYECCIÓN DE PENSIÓN POR EDAD
 <tr><td>65 años</td><td class="money" id="edad65_mensual"></td><td class="money" id="edad65_viudez"></td></tr>
 
 </table>
-
 </div>
 
-<button class="print" onclick="window.print()">
-Descargar PDF
-</button>
+<button class="print" onclick="window.print()">Descargar PDF</button>
 
 </div>
 
