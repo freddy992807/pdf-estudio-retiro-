@@ -94,15 +94,51 @@ display:none;
 
 <script>
 
-/* 2 DECIMALES EN TODO */
+/* =========================
+FORMATEO DINERO 2 DECIMALES
+========================= */
 
 function money(x){
-return "$"+Number(x).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+x = Number(x) || 0;
+
+return "$"+x.toLocaleString("en-US",{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+});
+
 }
 
+/* =========================
+CALCULO MENSUAL
+========================= */
+
 function mensual(x){
-return "$"+(Number(x)/12).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+x = Number(x) || 0;
+
+let m = x/12;
+
+return "$"+m.toLocaleString("en-US",{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+});
+
 }
+
+/* =========================
+FORMATO PORCENTAJE
+========================= */
+
+function porcentaje(x){
+
+x = Number(x) || 0;
+
+return (x*100).toFixed(2)+"%";
+
+}
+
+/* ========================= */
 
 function getParametro(nombre){
 const url=new URL(window.location.href);
@@ -128,10 +164,13 @@ let cliente=null;
 rows.forEach(r=>{
 
 let row = [];
+
 for (let i = 0; i < json.table.cols.length; i++) {
-    row[i] = r.c[i] ? r.c[i].v : "";
+
+row[i] = r.c[i] ? r.c[i].v : "";
+
 }
-  
+
 if(row[2]==id_cliente){
 cliente=row;
 }
@@ -143,7 +182,9 @@ alert("Cliente no encontrado");
 return;
 }
 
-/* MAPEO COLUMNAS */
+/* =========================
+MAPEO COLUMNAS
+========================= */
 
 let data={
 
@@ -151,36 +192,38 @@ nombre:cliente[0] || "",
 curp:cliente[1] || "",
 nss:cliente[2],
 
-sbc:cliente[8],
+sbc:Number(cliente[8]),
 uma:cliente[13],
-semanas:cliente[9],
+semanas:Number(cliente[9]),
 
-por_cb:cliente[14],
-por_inc:cliente[15],
-excedente:cliente[16],
-num_inc:cliente[17],
+por_cb:Number(cliente[14]),
+por_inc:Number(cliente[15]),
+excedente:Number(cliente[16]),
+num_inc:Number(cliente[17]),
 
-ayuda_esposa:cliente[23],
-ayuda_hijos:cliente[24],
-ayuda_total:cliente[26],
+ayuda_esposa:Number(cliente[23]),
+ayuda_hijos:Number(cliente[24]),
+ayuda_total:Number(cliente[26]),
 
-cb_anual:cliente[19],
-inc_total:cliente[22],
-reforma_total:cliente[27],
-pension_final:cliente[27],
+cb_anual:Number(cliente[19]),
+inc_total:Number(cliente[22]),
+reforma_total:Number(cliente[27]),
+pension_final:Number(cliente[27]),
 
-edad60:cliente[28],
-edad61:cliente[29],
-edad62:cliente[30],
-edad63:cliente[31],
-edad64:cliente[32],
-edad65:cliente[33]
+edad60:Number(cliente[28]),
+edad61:Number(cliente[29]),
+edad62:Number(cliente[30]),
+edad63:Number(cliente[31]),
+edad64:Number(cliente[32]),
+edad65:Number(cliente[33])
 
 };
 
 llenar(data);
 
 }
+
+/* ========================= */
 
 function llenar(data){
 
@@ -192,28 +235,34 @@ document.getElementById("sbc").innerHTML=money(data.sbc);
 document.getElementById("uma").innerHTML=data.uma;
 document.getElementById("semanas").innerHTML=data.semanas;
 
-/* CORRECCION PORCENTAJES */
+/* PORCENTAJES */
 
-document.getElementById("por_cb").innerHTML=(data.por_cb*100).toFixed(2)+"%";
-document.getElementById("por_inc").innerHTML=(data.por_inc*100).toFixed(2)+"%";
+document.getElementById("por_cb").innerHTML=porcentaje(data.por_cb);
+document.getElementById("por_inc").innerHTML=porcentaje(data.por_inc);
 
 document.getElementById("excedente").innerHTML=data.excedente;
 document.getElementById("num_inc").innerHTML=data.num_inc;
 
+/* AYUDAS */
+
 document.getElementById("ayuda_esposa").innerHTML=money(data.ayuda_esposa);
 document.getElementById("ayuda_hijos").innerHTML=money(data.ayuda_hijos);
 document.getElementById("ayuda_total").innerHTML=money(data.ayuda_total);
+
+/* CALCULO */
 
 document.getElementById("cb_anual").innerHTML=money(data.cb_anual);
 document.getElementById("inc_total").innerHTML=money(data.inc_total);
 document.getElementById("reforma_total").innerHTML=money(data.reforma_total);
 document.getElementById("pension_final").innerHTML=money(data.pension_final);
 
+/* PROYECCION EDADES */
+
 let edades=[60,61,62,63,64,65];
 
 edades.forEach(e=>{
 
-let anual=data["edad"+e];
+let anual = Number(data["edad"+e]) || 0;
 
 document.getElementById("edad"+e+"_anual").innerHTML=money(anual);
 document.getElementById("edad"+e+"_mensual").innerHTML=mensual(anual);
@@ -349,6 +398,10 @@ PROYECCIÓN DE PENSIÓN POR EDAD
 Descargar PDF
 </button>
 
+</div>
+
+</body>
+</html>
 </div>
 
 </body>
