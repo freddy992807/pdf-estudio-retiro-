@@ -116,19 +116,9 @@ const rows=json.table.rows;
 let cliente=null;
 
 rows.forEach(r=>{
-
-let row=[];
-
-for(let i=0;i<json.table.cols.length;i++){
-
-row[i]=r.c[i] ? (r.c[i].f ?? r.c[i].v) : "";
-
-}
-
 if(r.c[2] && r.c[2].v==id_cliente){
 cliente=r.c;
 }
-
 });
 
 if(!cliente){
@@ -154,7 +144,7 @@ document.getElementById("sbc").innerHTML=val(8);
 document.getElementById("uma").innerHTML=val(13);
 document.getElementById("semanas").innerHTML=val(9);
 
-/* PORCENTAJES */
+/* VARIABLES */
 
 document.getElementById("por_cb").innerHTML=val(14);
 document.getElementById("por_inc").innerHTML=val(15);
@@ -162,35 +152,55 @@ document.getElementById("por_inc").innerHTML=val(15);
 document.getElementById("excedente").innerHTML=val(16);
 document.getElementById("num_inc").innerHTML=val(17);
 
-/* AYUDAS */
+/* VALORES BASE */
 
-document.getElementById("ayuda_esposa").innerHTML=val(23);
-document.getElementById("ayuda_hijos").innerHTML=val(24);
-document.getElementById("ayuda_total").innerHTML=val(26);
+let cuantia = num(19);
+let incrementos = num(22);
 
-/* CALCULO */
+let ayuda_esposa = num(23);
+let ayuda_hijos = num(24);
 
-document.getElementById("cb_anual").innerHTML=val(19);
-document.getElementById("inc_total").innerHTML=val(22);
-document.getElementById("reforma_total").innerHTML=val(27);
-document.getElementById("pension_final").innerHTML=val(27);
+/* CALCULOS */
 
-/* PROYECCION EDADES */
+let ayudas_total = ayuda_esposa + ayuda_hijos;
+
+let subtotal = cuantia + incrementos + ayudas_total;
+
+let reforma = subtotal * 0.11;
+
+let pension_total = subtotal + reforma;
+
+/* MOSTRAR AYUDAS */
+
+document.getElementById("ayuda_esposa").innerHTML="$"+ayuda_esposa.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+document.getElementById("ayuda_hijos").innerHTML="$"+ayuda_hijos.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+document.getElementById("ayuda_total").innerHTML="$"+ayudas_total.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+/* CALCULO PENSION */
+
+document.getElementById("cb_anual").innerHTML="$"+cuantia.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+document.getElementById("inc_total").innerHTML="$"+incrementos.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+document.getElementById("reforma_total").innerHTML="$"+reforma.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+document.getElementById("pension_final").innerHTML="$"+pension_total.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+/* PROYECCION EDAD */
 
 let edades=[60,61,62,63,64,65];
 
 edades.forEach((e,i)=>{
 
-let anual=num(28+i);
+let anual = num(28+i);
 
-document.getElementById("edad"+e+"_anual").innerHTML=cliente[28+i]?.f ?? anual;
+document.getElementById("edad"+e+"_anual").innerHTML="$"+anual.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 
-let mensual=anual/12;
+let mensual = anual / 12;
 
-document.getElementById("edad"+e+"_mensual").innerHTML="$"+mensual.toLocaleString("en-US",{
-minimumFractionDigits:2,
-maximumFractionDigits:2
-});
+document.getElementById("edad"+e+"_mensual").innerHTML="$"+mensual.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 
 });
 
